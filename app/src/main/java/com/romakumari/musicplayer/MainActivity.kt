@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     var musiclist = ArrayList<MusicContent>()
+    var musicContent : MusicContent? = null
     var mediaPlayer = MediaPlayer()
 
     override fun onCreate(savedInstanceState: Bundle?) {

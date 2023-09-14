@@ -14,5 +14,5 @@ fun formatDuration(duration: Long):String{
      var minutes=TimeUnit.MINUTES.convert(duration,TimeUnit.MILLISECONDS)
      var seconds=(TimeUnit.SECONDS.convert(duration,TimeUnit.MILLISECONDS)-
              minutes*TimeUnit.SECONDS.convert(1,TimeUnit.MINUTES))
-    return String.format("0%2d :0%2d")
+     return String.format("%2d :" +"%2d")
 }

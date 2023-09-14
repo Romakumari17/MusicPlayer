@@ -87,6 +87,7 @@ class Playlist_fragment() : Fragment() ,  MusicInterface {
 
 
     override fun onsongPlayClick(musicContent: MusicContent) {
+        mainActivity.musicContent = musicContent
         if(mainActivity.mediaPlayer.isPlaying){
             mainActivity.mediaPlayer.stop()
             mainActivity.mediaPlayer.reset()

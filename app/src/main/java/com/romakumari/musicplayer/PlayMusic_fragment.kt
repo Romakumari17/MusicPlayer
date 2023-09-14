@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.romakumari.musicplayer.databinding.FragmentPlayMusicFragmentBinding
 import com.romakumari.musicplayer.databinding.PlaylistlayoutBinding
 import java.net.URI
@@ -24,63 +26,75 @@ private const val ARG_PARAM2 = "param2"
 class PlayMusic_fragment : Fragment() {
     lateinit var mainActivity: MainActivity
     lateinit var musicContent: MusicContent
-     var mediaPlayer = MediaPlayer()
-    var    songs = arrayListOf<Int>()
-    lateinit var binding:FragmentPlayMusicFragmentBinding
-    var currentsongIndex:Int=0
+    var mediaPlayer = MediaPlayer()
+    lateinit var navController: NavController
+    var songs = arrayListOf<Int>()
+    lateinit var binding: FragmentPlayMusicFragmentBinding
+    var currentsongIndex: Int = 0
+    var  musicargs=arguments
     private var param1: String? = null
     private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainActivity=activity as MainActivity
+        mainActivity = activity as MainActivity
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding= FragmentPlayMusicFragmentBinding.inflate(layoutInflater)
+        binding = FragmentPlayMusicFragmentBinding.inflate(layoutInflater)
         return binding.root
+      // binding.music.text = musicContent.title
+
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-      //  mediaPlayer = MediaPlayer.create(requireContext(), R.id.music)
+        //  mediaPlayer = MediaPlayer.create(requireContext(), R.id.music)
         binding.musiccontrol.setOnClickListener {
-            if (mediaPlayer.isPlaying){
+            if (mediaPlayer.isPlaying) {
+                binding.music.setText(mainActivity.musicContent?.title)
                 mediaPlayer.pause()
                 binding.musiccontrol.setBackgroundResource(R.drawable.baseline_pause_24)
-            }
-            else{
+            } else {
                 mediaPlayer.start()
                 binding.musiccontrol.setBackgroundResource(R.drawable.baseline_play_arrow_24)
 
             }
         }
-            binding.fabforward.setOnClickListener {
-                currentsongIndex++
-                if (currentsongIndex >= songs.size-1) {
-                    currentsongIndex = 0
-                }
-                mediaPlayer.release()
-                mediaPlayer = MediaPlayer.create(requireContext(), songs[currentsongIndex])
-                mediaPlayer.start()
+        binding.fabforward.setOnClickListener {
+            currentsongIndex++
+            if (currentsongIndex >= songs.size - 1) {
+                currentsongIndex = 0
             }
-    }
-        override fun onDestroy() {
-            super.onDestroy()
             mediaPlayer.release()
+            mediaPlayer = MediaPlayer.create(requireContext(), songs[currentsongIndex])
+            mediaPlayer.start()
         }
+       
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+    }
 
 
     companion object {
+
+        
+
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
@@ -98,5 +112,8 @@ class PlayMusic_fragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+
     }
+
+
 }

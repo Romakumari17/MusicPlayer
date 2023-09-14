@@ -1,12 +1,12 @@
 package com.romakumari.musicplayer
 
-import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 
 
@@ -37,14 +37,24 @@ class MusicAdapter(
         holder.musicname.setText(MusicContent[position].title)
         holder.duration.text= formatDuration(MusicContent[position].duration)
         holder.root.setOnClickListener {
-            var intent=Intent(context,PlayMusic_fragment::class.java)
-            ContextCompat.startActivity(context,intent,null)
+//            var intent=Intent(getContext() ,PlayMusic_fragment::class.java)
+//            ContextCompat.startActivity(,intent,null)
+
+//            val bundle = Bundle().apply {
+//                putString("title", MusicContent[position].title)
+//            }
+//            val fragment = PlayMusic_fragment
+//            fragment.arguments= bundle
+
         }
         holder.imageplay.setOnClickListener{
             musicInterface.onsongPlayClick(MusicContent[position])
         }
 
     }
+
+
+
     fun updatelist(musicContent: ArrayList<MusicContent>){
         this.MusicContent.clear()
         this.MusicContent.addAll(musicContent)
