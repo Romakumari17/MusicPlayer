@@ -3,10 +3,13 @@ package com.romakumari.musicplayer
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.romakumari.musicplayer.databinding.FragmentPlayMusicFragmentBinding
@@ -25,13 +28,10 @@ private const val ARG_PARAM2 = "param2"
  */
 class PlayMusic_fragment : Fragment() {
     lateinit var mainActivity: MainActivity
-    lateinit var musicContent: MusicContent
-    var mediaPlayer = MediaPlayer()
-    lateinit var navController: NavController
+    lateinit var runnable: Runnable
     var songs = arrayListOf<Int>()
     lateinit var binding: FragmentPlayMusicFragmentBinding
     var currentsongIndex: Int = 0
-    var  musicargs=arguments
     private var param1: String? = null
     private var param2: String? = null
 
@@ -61,33 +61,73 @@ class PlayMusic_fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //  mediaPlayer = MediaPlayer.create(requireContext(), R.id.music)
+        binding.seekstart.text = formatDuration(mainActivity.mediaPlayer.currentPosition.toLong())
+        binding.seekend.text = formatDuration(mainActivity.mediaPlayer.duration.toLong())
+        binding.Seekbar.progress = 0
+        seekbarsetup()
+        binding.Seekbar.max = mainActivity.mediaPlayer.duration
+        if (mainActivity.mediaPlayer.isPlaying) {
+            binding.music.setText(mainActivity.musicContent?.title)
+            mainActivity.mediaPlayer.pause()
+            binding.musiccontrol.setBackgroundResource(R.drawable.baseline_play_arrow_24)
+        } else {
+            mainActivity.mediaPlayer.start()
+            binding.musiccontrol.setBackgroundResource(R.drawable.baseline_pause_24)
+
+        }
         binding.musiccontrol.setOnClickListener {
-            if (mediaPlayer.isPlaying) {
+            if (mainActivity.mediaPlayer.isPlaying) {
                 binding.music.setText(mainActivity.musicContent?.title)
-                mediaPlayer.pause()
-                binding.musiccontrol.setBackgroundResource(R.drawable.baseline_pause_24)
-            } else {
-                mediaPlayer.start()
+                mainActivity.mediaPlayer.pause()
                 binding.musiccontrol.setBackgroundResource(R.drawable.baseline_play_arrow_24)
+            } else {
+                mainActivity.mediaPlayer.start()
+                binding.musiccontrol.setBackgroundResource(R.drawable.baseline_pause_24)
 
             }
         }
         binding.fabforward.setOnClickListener {
             currentsongIndex++
-            if (currentsongIndex >= songs.size - 1) {
+            if (currentsongIndex == songs.size - 1) {
                 currentsongIndex = 0
             }
-            mediaPlayer.release()
-            mediaPlayer = MediaPlayer.create(requireContext(), songs[currentsongIndex])
-            mediaPlayer.start()
+            else{
+                ++currentsongIndex
+            }
+            mainActivity.mediaPlayer.release()
+            mainActivity.mediaPlayer = MediaPlayer.create(requireContext(), songs[currentsongIndex])
+            mainActivity.mediaPlayer.start()
         }
-       
+        binding.Seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) mainActivity.mediaPlayer.seekTo(progress)
+            }
 
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
+
+
+        })
     }
+
+
+        fun seekbarsetup() {
+            runnable = Runnable {
+                binding.seekstart.text =
+                    formatDuration(mainActivity.mediaPlayer.currentPosition.toLong())
+                binding.Seekbar.progress = mainActivity.mediaPlayer.currentPosition
+                Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
+            }
+            Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
+        }
+
+
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        mainActivity.mediaPlayer.release()
     }
 
 

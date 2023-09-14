@@ -1,6 +1,6 @@
 package com.romakumari.musicplayer
 
-import android.os.Bundle
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,18 +37,11 @@ class MusicAdapter(
         holder.musicname.setText(MusicContent[position].title)
         holder.duration.text= formatDuration(MusicContent[position].duration)
         holder.root.setOnClickListener {
-//            var intent=Intent(getContext() ,PlayMusic_fragment::class.java)
-//            ContextCompat.startActivity(,intent,null)
-
-//            val bundle = Bundle().apply {
-//                putString("title", MusicContent[position].title)
-//            }
-//            val fragment = PlayMusic_fragment
-//            fragment.arguments= bundle
 
         }
         holder.imageplay.setOnClickListener{
             musicInterface.onsongPlayClick(MusicContent[position])
+
         }
 
     }

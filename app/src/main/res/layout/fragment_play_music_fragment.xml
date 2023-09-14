@@ -10,7 +10,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/img_1"
+        android:src="@drawable/img_2"
         android:id="@+id/musicimg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -18,10 +18,12 @@
         android:layout_marginTop="60dp"
         />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:textSize="20sp"
+        android:gravity="center"
+        android:text="@string/app_name"
         android:layout_marginVertical="20dp"
         android:id="@+id/music"
         app:layout_constraintEnd_toEndOf="parent"

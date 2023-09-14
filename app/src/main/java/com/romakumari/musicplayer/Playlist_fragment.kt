@@ -1,5 +1,6 @@
 package com.romakumari.musicplayer
 
+import android.app.Dialog
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcel
@@ -8,10 +9,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil.setContentView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romakumari.musicplayer.databinding.ActivityMainBinding
 import com.romakumari.musicplayer.databinding.FragmentPlaylistFragmentBinding
+import com.romakumari.musicplayer.databinding.PlaylistlayoutBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +27,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class Playlist_fragment() : Fragment() ,  MusicInterface {
-    lateinit var musicAdapter:MusicAdapter
+    lateinit var musicAdapter: MusicAdapter
     lateinit var mainActivity: MainActivity
     lateinit var binding: FragmentPlaylistFragmentBinding
     lateinit var musicViewModel: MusicViewModel
@@ -38,7 +41,7 @@ class Playlist_fragment() : Fragment() ,  MusicInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainActivity=activity as MainActivity
+        mainActivity = activity as MainActivity
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -50,17 +53,17 @@ class Playlist_fragment() : Fragment() ,  MusicInterface {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-       binding=FragmentPlaylistFragmentBinding.inflate(layoutInflater)
+        binding = FragmentPlaylistFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        musicAdapter=MusicAdapter(this)
-        binding.recyclerview.layoutManager=LinearLayoutManager(mainActivity)
-        binding.recyclerview.adapter=musicAdapter
-        musicViewModel=ViewModelProvider(mainActivity)[MusicViewModel::class.java]
-        musicViewModel.PlayMusic.observe(mainActivity){
+        musicAdapter = MusicAdapter(this)
+        binding.recyclerview.layoutManager = LinearLayoutManager(mainActivity)
+        binding.recyclerview.adapter = musicAdapter
+        musicViewModel = ViewModelProvider(mainActivity)[MusicViewModel::class.java]
+        musicViewModel.PlayMusic.observe(mainActivity) {
             musicAdapter.updatelist(it)
         }
     }
@@ -87,15 +90,32 @@ class Playlist_fragment() : Fragment() ,  MusicInterface {
 
 
     override fun onsongPlayClick(musicContent: MusicContent) {
+        //var dialogbinding = PlaylistlayoutBinding.inflate(layoutInflater)
         mainActivity.musicContent = musicContent
-        if(mainActivity.mediaPlayer.isPlaying){
+        if (mainActivity.mediaPlayer.isPlaying) {
             mainActivity.mediaPlayer.stop()
             mainActivity.mediaPlayer.reset()
-        }else{
-            mainActivity.mediaPlayer.setDataSource(mainActivity, Uri.parse(musicContent.storageLocation))
+           //  dialogbinding.imageplay.setBackgroundResource(R.drawable.baseline_pause_24)
+        } else {
+            mainActivity.mediaPlayer.setDataSource(
+                mainActivity,
+                Uri.parse(musicContent.storageLocation)
+            )
             mainActivity.mediaPlayer.prepare()
             mainActivity.mediaPlayer.start()
+          //  dialogbinding.imageplay.setBackgroundResource(R.drawable.baseline_play_arrow_24)
         }
+
+//        dialogbinding.imageplay.setOnClickListener {
+//            if (mainActivity.mediaPlayer.isPlaying) {
+//                mainActivity.mediaPlayer.pause()
+//                dialogbinding.imageplay.setBackgroundResource(R.drawable.baseline_play_arrow_24)
+//            } else {
+//                mainActivity.mediaPlayer.start()
+//                dialogbinding.imageplay.setBackgroundResource(R.drawable.baseline_pause_24)
+//
+//            }
+//        }
     }
 }
 
