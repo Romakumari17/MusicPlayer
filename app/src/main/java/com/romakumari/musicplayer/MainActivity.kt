@@ -87,10 +87,12 @@ class MainActivity : AppCompatActivity() {
             uri, null,
             selection, null, null
         )
+        musiclist.clear()
         if (cursor != null) {
             if (cursor?.moveToFirst() == true) {
                 while (cursor?.isLast == false) {
-                    musiclist.clear()
+                    System.out.println("in cursor ")
+
                     musiclist.add(
                         MusicContent(
                             title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)),

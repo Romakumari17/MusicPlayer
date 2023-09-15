@@ -1,7 +1,6 @@
 package com.romakumari.musicplayer
 
-import android.media.MediaPlayer
-import android.net.Uri
+
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,11 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
-import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
 import com.romakumari.musicplayer.databinding.FragmentPlayMusicFragmentBinding
-import com.romakumari.musicplayer.databinding.PlaylistlayoutBinding
-import java.net.URI
+import java.util.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,7 +25,7 @@ private const val ARG_PARAM2 = "param2"
 class PlayMusic_fragment : Fragment() {
     lateinit var mainActivity: MainActivity
     lateinit var runnable: Runnable
-    var songs = arrayListOf<Int>()
+    var songs = ArrayList<MusicContent>()
     lateinit var binding: FragmentPlayMusicFragmentBinding
     var currentsongIndex: Int = 0
     private var param1: String? = null
@@ -86,18 +82,14 @@ class PlayMusic_fragment : Fragment() {
 
             }
         }
-        binding.fabforward.setOnClickListener {
-            currentsongIndex++
-            if (currentsongIndex == songs.size - 1) {
-                currentsongIndex = 0
-            }
-            else{
-                ++currentsongIndex
-            }
-            mainActivity.mediaPlayer.release()
-            mainActivity.mediaPlayer = MediaPlayer.create(requireContext(), songs[currentsongIndex])
-            mainActivity.mediaPlayer.start()
+        binding.fabforward.setOnClickListener{
+            backforwardsong(increment = false)
         }
+       binding.fabback.setOnClickListener {
+           backforwardsong(increment = true)
+       }
+
+
         binding.Seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) mainActivity.mediaPlayer.seekTo(progress)
@@ -110,6 +102,7 @@ class PlayMusic_fragment : Fragment() {
 
 
         })
+
     }
 
 
@@ -123,11 +116,36 @@ class PlayMusic_fragment : Fragment() {
             Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
         }
 
+    fun backforwardsong(increment:Boolean) {
+        if (increment) {
+            setsongposition(increment=true)
+            createmediaplayer()
+        } else {
+            setsongposition(increment = false)
+            createmediaplayer()
+        }
+    }
+    fun setsongposition(increment: Boolean){
+        if (increment )
+        {
+            if (songs.size-1==currentsongIndex)
+                currentsongIndex=0
+            else ++currentsongIndex
+        }else
+        {
+            if (currentsongIndex==0)
+            currentsongIndex=songs.size-1
+        else --currentsongIndex
 
+        }
+    }
+    fun createmediaplayer() {
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mainActivity.mediaPlayer.release()
+        mainActivity.mediaPlayer.reset()
+        mainActivity.mediaPlayer.setDataSource(songs[currentsongIndex].storageLocation)
+        mainActivity.mediaPlayer.prepare()
+        mainActivity.mediaPlayer.start()
+       
     }
 
 
@@ -155,5 +173,7 @@ class PlayMusic_fragment : Fragment() {
 
     }
 
+      }
 
-}
+
+

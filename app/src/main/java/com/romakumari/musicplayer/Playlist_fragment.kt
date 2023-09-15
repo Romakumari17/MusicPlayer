@@ -89,13 +89,15 @@ class Playlist_fragment() : Fragment() ,  MusicInterface {
     }
 
 
-    override fun onsongPlayClick(musicContent: MusicContent) {
+    override fun onsongPlayClick(musicContent: MusicContent, position: Int) {
         //var dialogbinding = PlaylistlayoutBinding.inflate(layoutInflater)
         mainActivity.musicContent = musicContent
+        mainActivity.musiclist[position].isPlaying = true
+        musicAdapter.notifyDataSetChanged()
         if (mainActivity.mediaPlayer.isPlaying) {
             mainActivity.mediaPlayer.stop()
             mainActivity.mediaPlayer.reset()
-           //  dialogbinding.imageplay.setBackgroundResource(R.drawable.baseline_pause_24)
+
         } else {
             mainActivity.mediaPlayer.setDataSource(
                 mainActivity,
@@ -103,20 +105,8 @@ class Playlist_fragment() : Fragment() ,  MusicInterface {
             )
             mainActivity.mediaPlayer.prepare()
             mainActivity.mediaPlayer.start()
-          //  dialogbinding.imageplay.setBackgroundResource(R.drawable.baseline_play_arrow_24)
+
         }
-
-//        dialogbinding.imageplay.setOnClickListener {
-//            if (mainActivity.mediaPlayer.isPlaying) {
-//                mainActivity.mediaPlayer.pause()
-//                dialogbinding.imageplay.setBackgroundResource(R.drawable.baseline_play_arrow_24)
-//            } else {
-//                mainActivity.mediaPlayer.start()
-//                dialogbinding.imageplay.setBackgroundResource(R.drawable.baseline_pause_24)
-//
-//            }
-//        }
     }
+
 }
-
-
