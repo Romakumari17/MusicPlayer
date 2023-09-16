@@ -25,9 +25,8 @@ private const val ARG_PARAM2 = "param2"
 class PlayMusic_fragment : Fragment() {
     lateinit var mainActivity: MainActivity
     lateinit var runnable: Runnable
-    var songs = ArrayList<MusicContent>()
     lateinit var binding: FragmentPlayMusicFragmentBinding
-    var currentsongIndex: Int = 0
+     var currentsongIndex: Int = 0
     private var param1: String? = null
     private var param2: String? = null
 
@@ -83,12 +82,11 @@ class PlayMusic_fragment : Fragment() {
             }
         }
         binding.fabforward.setOnClickListener{
-            backforwardsong(increment = false)
+            backforwardsong(increment = true)
         }
        binding.fabback.setOnClickListener {
-           backforwardsong(increment = true)
+           backforwardsong(increment =false)
        }
-
 
         binding.Seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -118,34 +116,39 @@ class PlayMusic_fragment : Fragment() {
 
     fun backforwardsong(increment:Boolean) {
         if (increment) {
-            setsongposition(increment=true)
+            setsongposition(increment=false)
+            binding.music.text=mainActivity.musiclist[currentsongIndex].title
             createmediaplayer()
         } else {
-            setsongposition(increment = false)
+            setsongposition(increment = true)
+           binding.music.text=mainActivity.musiclist[currentsongIndex].title
             createmediaplayer()
         }
     }
     fun setsongposition(increment: Boolean){
         if (increment )
         {
-            if (songs.size-1==currentsongIndex)
+            if (currentsongIndex==mainActivity.musiclist.size-1)
                 currentsongIndex=0
+
             else ++currentsongIndex
         }else
         {
             if (currentsongIndex==0)
-            currentsongIndex=songs.size-1
+            currentsongIndex=mainActivity.musiclist.size-1
         else --currentsongIndex
 
         }
     }
     fun createmediaplayer() {
-
+        mainActivity.mediaPlayer.stop()
         mainActivity.mediaPlayer.reset()
-        mainActivity.mediaPlayer.setDataSource(songs[currentsongIndex].storageLocation)
+        mainActivity.mediaPlayer.setDataSource(mainActivity.musiclist[currentsongIndex].storageLocation)
         mainActivity.mediaPlayer.prepare()
         mainActivity.mediaPlayer.start()
-       
+
+
+
     }
 
 
