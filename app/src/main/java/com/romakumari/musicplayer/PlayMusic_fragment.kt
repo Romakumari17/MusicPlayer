@@ -119,10 +119,13 @@ class PlayMusic_fragment : Fragment() {
             setsongposition(increment=false)
             binding.music.text=mainActivity.musiclist[currentsongIndex].title
             createmediaplayer()
+
+
         } else {
             setsongposition(increment = true)
            binding.music.text=mainActivity.musiclist[currentsongIndex].title
             createmediaplayer()
+
         }
     }
     fun setsongposition(increment: Boolean){
@@ -146,7 +149,9 @@ class PlayMusic_fragment : Fragment() {
         mainActivity.mediaPlayer.setDataSource(mainActivity.musiclist[currentsongIndex].storageLocation)
         mainActivity.mediaPlayer.prepare()
         mainActivity.mediaPlayer.start()
-
+        binding.seekstart.text = formatDuration(mainActivity.mediaPlayer.currentPosition.toLong())
+        binding.seekend.text = formatDuration(mainActivity.mediaPlayer.duration.toLong())
+        binding.Seekbar.progress = 0
 
 
     }

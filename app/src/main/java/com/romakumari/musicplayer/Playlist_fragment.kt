@@ -90,7 +90,6 @@ class Playlist_fragment() : Fragment() ,  MusicInterface {
 
 
     override fun onsongPlayClick(musicContent: MusicContent, position: Int) {
-        //var dialogbinding = PlaylistlayoutBinding.inflate(layoutInflater)
         mainActivity.musicContent = musicContent
         mainActivity.musiclist[position].isPlaying = true
         musicAdapter.notifyDataSetChanged()
